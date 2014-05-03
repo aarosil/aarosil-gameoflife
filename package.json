@@ -1,0 +1,27 @@
+{
+  "name": "GameOfLife",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^3.4.0"
+  },
+  "description": "demo",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aarosil/aarosil-gameoflife.git"
+  },
+  "keywords": [
+    "angular",
+    "node"
+  ],
+  "author": "aarosil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aarosil/aarosil-gameoflife/issues"
+  },
+  "homepage": "https://github.com/aarosil/aarosil-gameoflife"
+}

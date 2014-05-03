@@ -1,0 +1,54 @@
+<!doctype html>
+<html data-ng-app="gameOfLife">
+<head>
+	<meta charset="utf-8">
+	<title>Game Of Life App</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">	
+	<link rel="stylesheet" href="css/style.css" type="text/css">
+</head>
+
+<body>
+
+	<div class="navbar navbar-default navbar-fixed-top" role="navigation" >
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#/">Conway's Game of Life</a>
+			</div>
+
+			<ul class="nav navbar-nav">
+			</ul>
+
+			<ul class="nav navbar-nav pull-right" >
+				<li>
+					<a href="#/about">About</a>
+				</li>
+			</ul>
+
+        </div>
+	</div>
+	
+	<div data-ng-view=""></div>
+
+    <div id="footer">
+        <div class="navbar navbar-default navbar-fixed-bottom">
+        	<div class="container">
+            	<div class="navbar-inner footer">
+                	<ul class="nav navbar-nav">
+                            Created by Aaron Siladi: <a href="https://github.com/aarosil/aarosil-gameoflife" target="_blank">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- 3rd Party Libraries  -->
+	<script src="lib/angular.js"></script>
+	<script src="lib/angular-route.js"></script>
+	<script src="lib/angular-resource.js"></script>	
+	
+	<!-- Site javascript -->
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>
