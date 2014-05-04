@@ -21,16 +21,17 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 		
 		$scope.form = {}
 
-		// give dimensions to create a blank grid object
+		// give dimensions to create a blank grid object,
 		// or pass in a multidim. array of values 
 		$scope.generateGrid = function(dimensions, inputArray) {
 			if (!dimensions && !inputArray) {  return  }
+			if (dimensions) {  $scope.iterations = 0  }
 			$scope.grid = []
 			// use input array for dimensions if it was given
 			dimensions = (inputArray) ? {x: inputArray[0].length, y: inputArray.length} : dimensions
 
 			for (var i =0; i < dimensions.y; i++) {
-				var row = {row: i, cells:[]}	
+				var row = {index: i, cells:[]}	
 				for (var j =0; j < dimensions.x; j++) {
 					// get the val. from inputArray
 					// otherwise create blank grid
@@ -47,7 +48,7 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 			$scope.grid[y].cells[x].val = ($scope.grid[y].cells[x].val === 0) ? 1 : 0
 		}
 
-		 
+		// restart timer if running, otherwise cancel it
 		$scope.startGame = function() {
 			if ($scope.gameInterval) {
 				$interval.cancel($scope.gameInterval)
@@ -57,7 +58,7 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 			}
 		}
 
-		// convert from  data object to multidim. array
+		// convert from data object to multidim. array
 		function convertGridObjToArray(gridObject) {
 			var gridArray = []
 			gridObject.forEach(function(row){
@@ -71,11 +72,13 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 		}
 
 		// retrieve the next state of grid from backend server
+		// after coverting from an object to array of arrays
 		function getNextState(){
 			var arr = convertGridObjToArray($scope.grid)
 			return $http.post('/gameoflife/getnextstate', arr).
 				then(function(response){
 					$scope.generateGrid(null, response.data)
+					$scope.iterations += 1
 				})
 		}
 

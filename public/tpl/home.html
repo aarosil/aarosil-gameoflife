@@ -10,13 +10,11 @@
 			<table>
 				<tr ng-repeat="row in grid">
 					<td ng-repeat="cell in row.cells track by cell.index" class="cell" 
-						ng-class="(cell.val === 0) ? 'dead' : 'alive'" ng-click="clickCell($index,row.row)">{{key}}
+						ng-class="(cell.val === 0) ? 'dead' : 'alive'" ng-click="clickCell($index,row.index)">
 					</td>
 				</tr>
 			</table>
-			<button type="submit" class="btn btn-default" ng-click="startGame()" ng-show="grid">Start/Stop Game</button>
 		</div>
 	</div>
-
 </div>
 
