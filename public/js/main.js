@@ -21,70 +21,62 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 		
 		$scope.form = {}
 
-		$scope.generateGrid = function(dimensions) {
+		// give dimensions to create a blank grid object
+		// or pass in a multidim. array of values 
+		$scope.generateGrid = function(dimensions, inputArray) {
+			if (!dimensions && !inputArray) {  return  }
 			$scope.grid = []
-			$scope.gameInterval = undefined
-			// create data format for ease of ng-repeat
-			for (var i =0; i < dimensions; i++) {
-				var row = {row: i, cells:{}}	
-				for (var j =0; j < dimensions; j++) {
-					row.cells[j] = 0
+			// use input array for dimensions if it was given
+			dimensions = (inputArray) ? {x: inputArray[0].length, y: inputArray.length} : dimensions
+
+			for (var i =0; i < dimensions.y; i++) {
+				var row = {row: i, cells:[]}	
+				for (var j =0; j < dimensions.x; j++) {
+					// get the val. from inputArray
+					// otherwise create blank grid
+					var val = (inputArray) ? inputArray[i][j] : 0
+					row.cells.push({index: j, val: val}) 
 				}
 				$scope.grid[i]=row
 			}
 		}
 
-		// when user clicks the cell change it values
+		// when user clicks the cell, change its value
 		$scope.clickCell= function(x,y) {
 			// note: y val is outer array index in multidim. array
-			$scope.grid[y].cells[x] = ($scope.grid[y].cells[x] === 1) ? 0 : 1
+			$scope.grid[y].cells[x].val = ($scope.grid[y].cells[x].val === 0) ? 1 : 0
 		}
 
 		 
 		$scope.startGame = function() {
 			if ($scope.gameInterval) {
 				$interval.cancel($scope.gameInterval)
-				$scope.gameInterval = undefined
+				$scope.gameInterval = undefined // cancel timer
 			} else {
 				$scope.gameInterval = $interval(getNextState,$scope.form.delay||500)
 			}
 		}
 
-		// change from multidimensional array to ng-repeat data ojb.
-		function convertArrayToGridObj(gridArr){
-			var gridObj = []
-			for (var i =0; i < gridArr.length; i++) {
-				var row = {row: i, cells:{}}	
-				for (var j =0; j < gridArr[0].length; j++) {
-					row.cells[j] = gridArr[i][j]
-				}
-				gridObj[i]=row
-			}
-			return gridObj
-		}
-
-		// change from the data object easy for ng-repeat to multidim. array
+		// convert from  data object to multidim. array
 		function convertGridObjToArray(gridObject) {
 			var gridArray = []
 			gridObject.forEach(function(row){
-				r = []
-				Object.keys(row.cells).forEach(function(cell){
-					r.push(row.cells[cell])
+				newRow = []
+				row.cells.forEach(function(cell){
+					newRow.push(cell.val)
 				})
-				gridArray.push(r)
+				gridArray.push(newRow)
 			})
 			return gridArray
 		}
 
 		// retrieve the next state of grid from backend server
 		function getNextState(){
-			var gridArray = convertGridObjToArray($scope.grid)
-			return $http.post('/gameoflife/getnextstate', gridArray).
+			var arr = convertGridObjToArray($scope.grid)
+			return $http.post('/gameoflife/getnextstate', arr).
 				then(function(response){
-					var newGridObj = convertArrayToGridObj(response.data)
-					$scope.grid = newGridObj
+					$scope.generateGrid(null, response.data)
 				})
 		}
-
 
 }]);
