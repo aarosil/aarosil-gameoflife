@@ -12,6 +12,7 @@ function Board(cellArray) {
 	this.cells = cellArray	
 }	
 
+// return the next state of the board, given the current state
 Board.prototype.getNextState = function() {
 	var nextState = []
 	var nextCellState
@@ -36,114 +37,60 @@ Board.prototype.getNextState = function() {
 
 }
 
-Board.prototype.getCellsToCheck = function(x,y) {
+// return the neighbor cells that don't exceed 
+// dimensions of the game board.
+Board.prototype.getNeighborCells = function(x,y) {
+	var h = this.height
+	var w = this.width
+	// calculate all potential neighbors clockwise starting in top left
+	var potentialNeighbors = [
+		{
+			x: x-1,
+			y: y-1
+		},
+		{
+			x: x,
+			y: y-1
+		},
+		{
+			x: x+1,
+			y: y-1
+		},
+		{
+			x: x+1,
+			y: y
+		},
+		{
+			x: x+1,
+			y: y+1
+		},
+		{
+			x: x,
+			y: y+1
+		},
 
-	var height = this.height
-	var width = this.width
-
-	if (x === 0) { // left column
-
-		if (y === 0) { // upper left corner 
-			return [
-				{x: x+1, y: y},
-				{x: x+1, y: y+1},
-				{x: x, y: y+1}
-			]
-		}
-
-		else if (y === height-1) { // bottom left corner 
-			return [
-				{x: x+1, y: y},
-				{x: x+1, y: y-1},
-				{x: x, y: y-1}
-			]
-		}
-
-		else { // left column middle
-			return [
-				{x: x, y: y+1},
-				{x: x+1, y: y+1},
-				{x: x+1, y: y},
-				{x: x+1,y: y-1},
-				{x: x,y: y-1},
-			]
-		}
-
-	}
-	else if (x === width-1) { // right column
-
-		if (y === 0) { // upper right corner 
-			return [
-				{x: x, y: y+1},
-				{x: x-1, y: y+1},
-				{x: x-1, y: y},
-			]
-		}
-
-		else if (y === height-1) { // lower right corner 
-			return [
-				{x: x-1, y: y},
-				{x: x-1, y: y-1},
-				{x: x, y: y-1},
-			]
-		}
-
-		else { // right column middle
-			return [
-				{x: x, y: y+1},
-				{x: x-1, y: y+1},
-				{x: x-1, y: y},
-				{x: x-1,y: y-1},
-				{x: x,y: y-1},
-			]
-		}
-	}
-	else { // middle columns 
-
-		if (y === 0) { // top row middle
-			return [
-				{x: x-1, y: y},
-				{x: x+1, y: y},
-				{x: x-1, y: y+1},
-				{x: x, y: y+1},
-				{x: x+1, y: y+1}
-			]
-		}
-
-		else if (y === height-1) { // bottom row middle
-			return [
-				{x: x-1, y: y},
-				{x: x+1, y: y},
-				{x: x-1, y: y-1},
-				{x: x, y: y-1},
-				{x: x+1, y: y-1}
-			]
-		}
-
-		else { // center of grid - has all 8 neightbors
-			return [
-				{x: x-1, y: y},
-				{x: x+1, y: y},
-				{x: x-1, y: y+1},
-				{x: x, y: y+1},
-				{x: x+1, y: y+1},
-				{x: x-1, y: y-1},
-				{x: x, y: y-1},
-				{x: x+1, y: y-1}				
-			]
-		}
-	}
+		{
+			x: x-1,
+			y: y+1
+		},
+		{
+			x: x-1,
+			y: y
+		}												
+	]
+	// filter out neighbors that exceed board dimensions
+	return potentialNeighbors.filter(function(cell){
+		return (cell.x < w) && (cell.x >= 0) && (cell.y < h) && (cell.y >= 0)
+	});
 
 }
 
+// get valid neighbor cells then sum their values
 Board.prototype.countLivingNeighbors = function(x,y) {
-	var count = 0;
-	var self = this;
-
-	var neighbors = this.getCellsToCheck(x,y)
+	var cells = this.cells;
+	var neighbors = this.getNeighborCells(x,y)
 	// note: y val is outer array index in multidim. array
-	return neighbors.reduce(function(a, b){return a + self.cells[b.y][b.x]},0)
-
+	return neighbors.reduce(function(a, b){return a + cells[b.y][b.x]},0)
 }
 
 module.exports = Board
