@@ -1,4 +1,4 @@
-var gameOfLife = angular.module('gameOfLife', ['ngRoute', 'ngResource']);
+var gameOfLife = angular.module('gameOfLife', ['ngRoute', 'ngResource', 'ngAnimate']);
 
 gameOfLife.config(['$routeProvider',
 	function($routeProvider) {
@@ -21,25 +21,32 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 		
 		$scope.form = {}
 
-		// give dimensions to create a blank grid object,
-		// or pass in a multidim. array of values 
-		$scope.generateGrid = function(dimensions, inputArray) {
-			if (!dimensions && !inputArray) {  return  }
+		// give dimensions to create a new blank grid object,
+		// or pass in a multidim. array of values to load
+		// pass refreshVals to update existing scope grid w/ inputArray
+		$scope.generateGrid = function(dimensions, inputArray, refreshVals) {
+			// dimensions == new grid, so reset generation count
 			if (dimensions) {  $scope.iterations = 0  }
-			$scope.grid = []
-			// use input array for dimensions if it was given
+			var newGrid = [];
+			// use input array's dimensions if it was given
 			dimensions = (inputArray) ? {x: inputArray[0].length, y: inputArray.length} : dimensions
-
-			for (var i =0; i < dimensions.y; i++) {
-				var row = {index: i, cells:[]}	
-				for (var j =0; j < dimensions.x; j++) {
-					// get the val. from inputArray
-					// otherwise create blank grid
-					var val = (inputArray) ? inputArray[i][j] : 0
-					row.cells.push({index: j, val: val}) 
+			// all rows and cells
+			for (var y =0; y < dimensions.y; y++) {
+				var row = {index: y, cells:[]}	
+				for (var x =0; x < dimensions.x; x++) {
+					// get the val. from inputArray if it exists
+					var val = (inputArray) ? inputArray[y][x] : 0;
+					if (refreshVals) {
+						// replace existing grid w/ this val
+						$scope.grid[y].cells[x].val = val;
+					} else {
+						row.cells.push({index: x, val: val});
+					}
 				}
-				$scope.grid[i]=row
+				newGrid[y]=row  
 			}
+			// update scope w/ new grid
+			if (!refreshVals) {  $scope.grid = newGrid  }
 		}
 
 		// when user clicks the cell, change its value
@@ -77,7 +84,7 @@ gameOfLife.controller('HomeCtrl', ['$scope', '$http', '$interval',
 			var arr = convertGridObjToArray($scope.grid)
 			return $http.post('/gameoflife/getnextstate', arr).
 				then(function(response){
-					$scope.generateGrid(null, response.data)
+					$scope.generateGrid(null, response.data, true)
 					$scope.iterations += 1
 				})
 		}

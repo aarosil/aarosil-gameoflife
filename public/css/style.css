@@ -2,12 +2,10 @@ body {
 	padding-top: 70px;
 	padding-bottom: 70px;
 }
-
 .footer {
   margin-top:15px;
   font-weight: bold;
 }
-
 .cell {
 	display: inline-block;
 	border-style: solid;
@@ -16,11 +14,26 @@ body {
 	width: 22px;
 	height: 22px;
 }
-
 .dead {
 	background-color: #CCCCCC;
 }
-
 .alive {
-	background-color: green;
+	background-color: #32CD32;
 }
+.cell.alive-add  {
+  -webkit-transition:0.3s linear all;
+  transition:0.3s linear all;
+  background:#32CD32;	
+}
+.cell.alive-add-active {
+	background: #00FF00;
+}
+.cell.alive-remove  {
+  -webkit-transition:0.3s linear all;
+  transition:0.3s linear all;
+  background:CCCCCC;	
+}
+.cell.alive-remove-active {
+	background: red;
+}
+
