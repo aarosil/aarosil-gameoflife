@@ -34,7 +34,6 @@ Board.prototype.getNextState = function() {
 		nextState.push(newRow)
 	}
 	return nextState
-
 }
 
 // return the neighbor cells that don't exceed 
@@ -43,46 +42,21 @@ Board.prototype.getNeighborCells = function(x,y) {
 	var h = this.height
 	var w = this.width
 	// calculate all potential neighbors clockwise starting in top left
+	// origin (0,0) is top left of grid
 	var potentialNeighbors = [
-		{
-			x: x-1,
-			y: y-1
-		},
-		{
-			x: x,
-			y: y-1
-		},
-		{
-			x: x+1,
-			y: y-1
-		},
-		{
-			x: x+1,
-			y: y
-		},
-		{
-			x: x+1,
-			y: y+1
-		},
-		{
-			x: x,
-			y: y+1
-		},
+		{	x: x-1, 	y: y-1 	}, // above left 
+		{	x: x,		y: y-1	}, // above 
+		{	x: x+1,		y: y-1	}, // above right
+		{	x: x+1,		y: y	}, // right
+		{	x: x+1,		y: y+1	}, // below right
+		{	x: x,		y: y+1	}, // below 
+		{	x: x-1,		y: y+1	}, // below left
+		{	x: x-1,		y: y	}];// left 
 
-		{
-			x: x-1,
-			y: y+1
-		},
-		{
-			x: x-1,
-			y: y
-		}												
-	]
 	// filter out neighbors that exceed board dimensions
 	return potentialNeighbors.filter(function(cell){
 		return (cell.x < w) && (cell.x >= 0) && (cell.y < h) && (cell.y >= 0)
 	});
-
 }
 
 // get valid neighbor cells then sum their values
