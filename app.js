@@ -6,7 +6,7 @@ var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose')
 mongoose = require('./app/config/db')(mongoose)
-var gol = require('./gameOfLife')
+var gol = require('./app/gameOfLife')
 var app = express();
 
 /**
